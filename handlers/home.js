@@ -2,6 +2,7 @@ const url = require('url')
 const fs = require('fs')
 const path = require('path')
 const database = require('../config/database')
+const qs = require('querystring')
 
 module.exports = (req, res) => {
   req.pathname = req.pathname || url.parse(req.url).pathname
@@ -22,8 +23,13 @@ module.exports = (req, res) => {
         return
       }
 
-      let products = database.products.getAll()
       let content = ''
+      let products = database.products.getAll()
+      let queryData = qs.parse(url.parse(req.url).query)
+
+      if (queryData.query) {
+        products = products.filter(p => p.name.toString().toLowerCase().startsWith(queryData.query.toLowerCase()))
+      }
 
       for (const product of products) {
         content +=
