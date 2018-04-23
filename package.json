@@ -1,0 +1,27 @@
+{
+  "name": "shop-stop-app",
+  "version": "1.0.0",
+  "description": "Very simple product catalog website.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeterAsenov22/Shop-Stop-App.git"
+  },
+  "keywords": [
+    "product",
+    "catalog",
+    "website"
+  ],
+  "author": "PA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PeterAsenov22/Shop-Stop-App/issues"
+  },
+  "homepage": "https://github.com/PeterAsenov22/Shop-Stop-App#readme",
+  "dependencies": {
+    "standard": "11.0.1"
+  }
+}
