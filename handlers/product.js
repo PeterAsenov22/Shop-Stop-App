@@ -1,7 +1,6 @@
 const url = require('url')
 const fs = require('fs')
 const path = require('path')
-const qs = require('querystring')
 const database = require('../config/database')
 const multiparty = require('multiparty')
 const shortid = require('shortid')
