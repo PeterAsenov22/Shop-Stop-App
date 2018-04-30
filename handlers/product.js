@@ -3,6 +3,7 @@ const path = require('path')
 const multiparty = require('multiparty')
 const shortid = require('shortid')
 const Product = require('../models/Product')
+const Category = require('../models/Category')
 
 module.exports = (req, res) => {
   if (req.pathname === '/product/add' && req.method === 'GET') {
@@ -21,12 +22,22 @@ module.exports = (req, res) => {
         return
       }
 
-      res.writeHead(200, {
-        'Content-Type': 'text/html'
-      })
+      Category.find().then((categories) => {
+        let replacement = '<select class="input-field" name="category">'
+        for (let category of categories) {
+          replacement += `<option value="${category.id}">${category.name}</option>`
+        }
+        replacement += '</select>'
 
-      res.write(data)
-      res.end()
+        data = data.toString().replace('{categories}', replacement)
+
+        res.writeHead(200, {
+          'Content-Type': 'text/html'
+        })
+
+        res.write(data)
+        res.end()
+      })
     })
   } else if (req.pathname === '/product/add' && req.method === 'POST') {
     let form = new multiparty.Form()
@@ -70,11 +81,16 @@ module.exports = (req, res) => {
     })
 
     form.on('close', () => {
-      Product.create(product).then(() => {
-        res.writeHead(302, {
-          'Location': '/'
+      Product.create(product).then(insertedProduct => {
+        Category.findById(insertedProduct.category).then(category => {
+          category.products.push(insertedProduct.id)
+          category.save()
+
+          res.writeHead(302, {
+            'Location': '/'
+          })
+          res.end()
         })
-        res.end()
       })
     })
 
