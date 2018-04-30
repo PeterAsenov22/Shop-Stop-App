@@ -1,4 +1,5 @@
 const http = require('http')
+const url = require('url')
 const port = 3000
 const handlers = require('./handlers/index')
 
@@ -9,6 +10,7 @@ const database = require('./config/database.config')
 database(config[environment])
 
 http.createServer((req, res) => {
+  req.pathname = url.parse(req.url).pathname
   for (const handler of handlers) {
     let result = handler(req, res)
     if (!result) {

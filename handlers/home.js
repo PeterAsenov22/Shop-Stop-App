@@ -5,8 +5,6 @@ const qs = require('querystring')
 const Product = require('../models/Product')
 
 module.exports = (req, res) => {
-  req.pathname = req.pathname || url.parse(req.url).pathname
-
   if (req.pathname === '/' && req.method === 'GET') {
     let filePath = path.normalize(
       path.join(__dirname, '../views/home/index.html'))

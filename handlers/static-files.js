@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const url = require('url')
 
 let typeChecker = path => {
   let support = {
@@ -22,7 +21,6 @@ let typeChecker = path => {
 }
 
 module.exports = (req, res) => {
-  req.pathname = req.pathname || url.parse(req.url).pathname
   let type = typeChecker(req.pathname)
 
   if (req.pathname.startsWith('/content/') && req.method === 'GET') {

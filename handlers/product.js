@@ -1,4 +1,3 @@
-const url = require('url')
 const fs = require('fs')
 const path = require('path')
 const multiparty = require('multiparty')
@@ -6,8 +5,6 @@ const shortid = require('shortid')
 const Product = require('../models/Product')
 
 module.exports = (req, res) => {
-  req.pathname = req.pathname || url.parse(req.url).pathname
-
   if (req.pathname === '/product/add' && req.method === 'GET') {
     let filePath = path.normalize(
       path.join(__dirname, '../views/products/add.html'))
