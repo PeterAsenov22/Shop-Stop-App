@@ -46,7 +46,6 @@ module.exports = (req, res) => {
     form.on('part', (part) => {
       if (part.filename) {
         let dataString = ''
-        console.log(part)
 
         part.setEncoding('binary')
         part.on('data', (data) => {
