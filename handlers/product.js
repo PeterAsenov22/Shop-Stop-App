@@ -36,7 +36,6 @@ module.exports = (req, res) => {
     let product = {}
 
     form.on('part', (part) => {
-
       if (part.filename) {
         let dataString = ''
         console.log(part)
