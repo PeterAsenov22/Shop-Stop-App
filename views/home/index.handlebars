@@ -1,0 +1,13 @@
+<h1 class="head-title">Welcome to ShopStop!</h1>
+    <form id="search-form">
+      <input type="text" name="query" placeholder="Search...">
+      <input type="submit" value="Search">
+    </form>
+    <div class="cards">
+      {{#each products}}
+        {{> product}}
+        {{else}}
+          <p>There are no products in the database.</p>
+      {{/each}}
+    </div>
+
