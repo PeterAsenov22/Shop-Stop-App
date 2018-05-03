@@ -1,22 +1,14 @@
-const http = require('http')
-const url = require('url')
 const port = 3000
-const handlers = require('./handlers/index')
-
-let environment = process.env.NODE_ENV || 'development'
+const express = require('express')
 const config = require('./config/config')
 const database = require('./config/database.config')
 
+let environment = process.env.NODE_ENV || 'development'
+let app = express()
+
 database(config[environment])
+require('./config/express')(app, config[environment])
+require('./config/routes')(app)
 
-http.createServer((req, res) => {
-  req.pathname = url.parse(req.url).pathname
-  for (const handler of handlers) {
-    let result = handler(req, res)
-    if (!result) {
-      break
-    }
-  }
-}).listen(port)
-
+app.listen(port)
 console.log(`Server listening on port ${port}...`)
