@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const Product = require('../models/Product')
 const Category = require('../models/Category')
 
@@ -107,15 +109,21 @@ module.exports.deletePost = (req, res) => {
       return
     }
 
-    Category.findById(product.category).then(category => {
-      let index = category.products.indexOf(product.id)
-      if (index >= 0) {
-        category.products.splice(index, 1)
+    fs.unlink('.' + product.image, (err) => {
+      if (err) {
+        console.log(err)
       }
 
-      category.save()
-      product.remove().then(() => {
-        res.redirect(`/?success=${encodeURIComponent('Product was removed successfully!')}`)
+      Category.findById(product.category).then(category => {
+        let index = category.products.indexOf(product.id)
+        if (index >= 0) {
+          category.products.splice(index, 1)
+        }
+
+        category.save()
+        product.remove().then(() => {
+          res.redirect(`/?success=${encodeURIComponent('Product was removed successfully!')}`)
+        })
       })
     })
   })
