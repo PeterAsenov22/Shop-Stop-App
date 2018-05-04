@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 const Product = require('../models/Product')
 const Category = require('../models/Category')
 
