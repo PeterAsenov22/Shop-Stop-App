@@ -11,7 +11,7 @@ let productSchema = mongoose.Schema({
   },
   image: {type: 'String'},
   isBought: {type: 'Boolean', default: false},
-  category: {type: 'ObjectId', ref: 'Category'}
+  category: {type: mongoose.Schema.Types.ObjectId, ref: 'Category'}
 })
 
 let Product = mongoose.model('Product', productSchema)

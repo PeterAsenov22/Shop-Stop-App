@@ -10,3 +10,22 @@ module.exports.addPost = (req, res) => {
     res.redirect('/')
   })
 }
+
+module.exports.productByCategory = (req, res) => {
+  let categoryName = req.params.category
+
+  Category
+    .findOne({name: categoryName})
+    .populate('products')
+    .then(category => {
+      if (!category) {
+        res.sendStatus(404)
+        return
+      }
+
+      res.render('category/all-by-category', {
+        name: category.name,
+        products: category.products
+      })
+    })
+}
