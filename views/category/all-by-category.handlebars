@@ -1,0 +1,8 @@
+<h2>All {{{name}}}</h2>
+<div class="cards">
+      {{#each products}}
+        {{> product}}
+        {{else}}
+          <p>There are no products in the database.</p>
+      {{/each}}
+    </div>
