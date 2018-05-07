@@ -19,9 +19,8 @@
         <li class="delimeter"></li>
         {{#if user}}
           <li class="align-right">
-            <form id="logout-form" method="post" action="/user/logout">
-               <a href="javascript: getElementById('logout-form').submit()">Logout</a>
-            </form>
+            <form id="logout-form" method="post" action="/user/logout"></form>
+            <a href="javascript:document.getElementById('logout-form').submit()">Logout</a>
           </li>
           <li class="align-right">
             <span>Welcome, {{{user.username}}}!</span>
