@@ -1,4 +1,4 @@
-const handlers = require('../handlers/index')
+const handlers = require('../controllers/index')
 const multer = require('multer')
 
 let upload = multer({dest: './content/images'})
