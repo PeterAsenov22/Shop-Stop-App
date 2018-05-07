@@ -1,6 +1,5 @@
 const handlers = require('../controllers/index')
 const multer = require('multer')
-
 let upload = multer({dest: './content/images'})
 
 module.exports = (app) => {
@@ -21,6 +20,9 @@ module.exports = (app) => {
   app.post('/product/delete/:id', handlers.product.deletePost)
 
   app.get('/product/buy/:id', handlers.product.buyGet)
+
+  app.get('/user/register', handlers.user.registerGet)
+  app.post('/user/register', handlers.user.registerPost)
 
   app.all('*', handlers.error.error)
 }
