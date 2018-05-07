@@ -39,3 +39,37 @@ module.exports.registerPost = (req, res) => {
       res.render('user/register', userFormObj)
     })
 }
+
+module.exports.loginGet = (req, res) => {
+  res.render('user/login')
+}
+
+module.exports.loginPost = (req, res) => {
+  let userToLogin = req.body
+  console.log(userToLogin)
+
+  User.findOne({username: userToLogin.username})
+    .then(user => {
+      if (!user || !user.authenticate(userToLogin.password)) {
+        res.render('user/login', {error: 'Invalid credentials.'})
+        return
+      }
+
+      req.login(user, (err, user) => {
+        if (err) {
+          res.render('user/login', {error: 'Authentication not working!'})
+          return
+        }
+
+        res.redirect('/')
+      })
+    })
+    .catch(() => {
+      res.render('user/login', {error: 'Invalid credentials.'})
+    })
+}
+
+module.exports.logout = (req, res) => {
+  req.logout()
+  res.redirect('/')
+}
