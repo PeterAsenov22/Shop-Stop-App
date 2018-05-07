@@ -24,5 +24,10 @@ module.exports = (app) => {
   app.get('/user/register', handlers.user.registerGet)
   app.post('/user/register', handlers.user.registerPost)
 
+  app.get('/user/login', handlers.user.loginGet)
+  app.post('/user/login', handlers.user.loginPost)
+
+  app.post('/user/logout', handlers.user.logout)
+
   app.all('*', handlers.error.error)
 }
