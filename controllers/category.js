@@ -1,4 +1,5 @@
 const Category = require('../models/Category')
+const User = require('../models/User')
 
 module.exports.addGet = (req, res) => {
   res.render('category/add')
@@ -6,8 +7,14 @@ module.exports.addGet = (req, res) => {
 
 module.exports.addPost = (req, res) => {
   let category = req.body
-  Category.create(category).then(() => {
-    res.redirect('/')
+  category.creator = req.user.id
+  Category.create(category).then(category => {
+    User.findById(req.user.id).then(user => {
+      user.createdCategories.push(category.id)
+      user.save()
+
+      res.redirect('/')
+    })
   })
 }
 

@@ -46,7 +46,6 @@ module.exports.loginGet = (req, res) => {
 
 module.exports.loginPost = (req, res) => {
   let userToLogin = req.body
-  console.log(userToLogin)
 
   User.findOne({username: userToLogin.username})
     .then(user => {

@@ -1,6 +1,7 @@
 const fs = require('fs')
 const Product = require('../models/Product')
 const Category = require('../models/Category')
+const User = require('../models/User')
 
 module.exports.addGet = (req, res) => {
   Category.find().then((categories) => {
@@ -12,15 +13,27 @@ module.exports.addGet = (req, res) => {
 
 module.exports.addPost = (req, res) => {
   let productObj = req.body
-  productObj.image = '\\' + req.file.path
+  if (req.file) {
+    productObj.image = '\\' + req.file.path
+  }
+
+  productObj.creator = req.user.id
 
   Product.create(productObj).then(product => {
     Category.findById(product.category).then(category => {
       category.products.push(product.id)
       category.save()
 
-      res.redirect('/')
+      User.findById(req.user.id).then(user => {
+        user.createdProducts.push(product.id)
+        user.save()
+
+        res.redirect('/')
+      })
     })
+  }).catch(err => {
+    productObj.error = err.message
+    res.render('products/add', productObj)
   })
 }
 
@@ -31,13 +44,17 @@ module.exports.editGet = (req, res) => {
       res.sendStatus(404)
     }
 
-    Category.find().then((categories) => {
-      categories.forEach(c => { c.selected = (c.id === product.category.id) })
-      res.render('products/edit', {
-        categories,
-        product
+    if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
+      Category.find().then((categories) => {
+        categories.forEach(c => { c.selected = (c.id === product.category.id) })
+        res.render('products/edit', {
+          categories,
+          product
+        })
       })
-    })
+    } else {
+      res.redirect(`/?error=${encodeURIComponent('You are not allowed to edit this product!')}`)
+    }
   })
 }
 
@@ -51,51 +68,59 @@ module.exports.editPost = (req, res) => {
       return
     }
 
-    product.name = editedProduct.name
-    product.description = editedProduct.description
-    product.price = editedProduct.price
+    if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
+      product.name = editedProduct.name
+      product.description = editedProduct.description
+      product.price = editedProduct.price
 
-    if (req.file) {
-      product.image = '\\' + req.file.path
-    }
+      if (req.file) {
+        product.image = '\\' + req.file.path
+      }
 
-    if (product.category.toString() !== editedProduct.category) {
-      Category.findById(product.category).then(currentCategory => {
-        Category.findById(editedProduct.category).then(newCategory => {
-          let index = currentCategory.products.indexOf(product.id)
-          if (index >= 0) {
-            currentCategory.products.splice(index, 1)
-          }
+      if (product.category.toString() !== editedProduct.category) {
+        Category.findById(product.category).then(currentCategory => {
+          Category.findById(editedProduct.category).then(newCategory => {
+            let index = currentCategory.products.indexOf(product.id)
+            if (index >= 0) {
+              currentCategory.products.splice(index, 1)
+            }
 
-          currentCategory.save()
+            currentCategory.save()
 
-          newCategory.products.push(product.id)
-          newCategory.save()
+            newCategory.products.push(product.id)
+            newCategory.save()
 
-          product.category = editedProduct.category
-          product.save().then(() => {
-            res.redirect(`/?success=${encodeURIComponent('Product was edited successfully!')}`)
+            product.category = editedProduct.category
+            product.save().then(() => {
+              res.redirect(`/?success=${encodeURIComponent('Product was edited successfully!')}`)
+            })
           })
         })
-      })
+      } else {
+        product.save().then(() => {
+          res.redirect(`/?success=${encodeURIComponent('Product was edited successfully!')}`)
+        })
+      }
     } else {
-      product.save().then(() => {
-        res.redirect(`/?success=${encodeURIComponent('Product was edited successfully!')}`)
-      })
+      res.redirect(`/?error=${encodeURIComponent('You are not allowed to edit this product!')}`)
     }
   })
 }
 
 module.exports.deleteGet = (req, res) => {
   let id = req.params.id
-  Product.findById(id).select('name description image').then(product => {
+  Product.findById(id).then(product => {
     if (!product) {
       res.sendStatus(404)
     }
 
-    res.render('products/delete', {
-      product
-    })
+    if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
+      res.render('products/delete', {
+        product
+      })
+    } else {
+      res.redirect(`/?error=${encodeURIComponent('You are not allowed to delete this product!')}`)
+    }
   })
 }
 
@@ -108,23 +133,27 @@ module.exports.deletePost = (req, res) => {
       return
     }
 
-    fs.unlink('.' + product.image, (err) => {
-      if (err) {
-        console.log(err)
-      }
-
-      Category.findById(product.category).then(category => {
-        let index = category.products.indexOf(product.id)
-        if (index >= 0) {
-          category.products.splice(index, 1)
+    if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
+      fs.unlink('.' + product.image, (err) => {
+        if (err) {
+          console.log(err)
         }
 
-        category.save()
-        product.remove().then(() => {
-          res.redirect(`/?success=${encodeURIComponent('Product was removed successfully!')}`)
+        Category.findById(product.category).then(category => {
+          let index = category.products.indexOf(product.id)
+          if (index >= 0) {
+            category.products.splice(index, 1)
+          }
+
+          category.save()
+          product.remove().then(() => {
+            res.redirect(`/?success=${encodeURIComponent('Product was removed successfully!')}`)
+          })
         })
       })
-    })
+    } else {
+      res.redirect(`/?error=${encodeURIComponent('You are not allowed to delete this product!')}`)
+    }
   })
 }
 
