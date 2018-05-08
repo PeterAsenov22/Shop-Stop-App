@@ -140,3 +140,23 @@ module.exports.buyGet = (req, res) => {
     })
   })
 }
+
+module.exports.buyPost = (req, res) => {
+  let productId = req.params.id
+
+  Product.findById(productId).then(product => {
+    if (product.buyer) {
+      let error = `error=${encodeURIComponent('Product was already bought!')}`
+      res.redirect(`/${error}`)
+      return
+    }
+
+    product.buyer = req.user.id
+    product.save().then(() => {
+      req.user.boughtProducts.push(productId)
+      req.user.save().then(() => {
+        res.redirect('/')
+      })
+    })
+  })
+}
