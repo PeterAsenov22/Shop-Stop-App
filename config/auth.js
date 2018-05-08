@@ -4,7 +4,7 @@ module.exports = {
       next()
     } else {
       // If not authenticated - login.
-      res.redirect('/user/login')
+      res.redirect('/')
     }
   },
   isInRole: (role) => {
@@ -13,7 +13,7 @@ module.exports = {
         next()
       } else {
         // If not authorized - login with proper account.
-        res.redirect('/user/login')
+        res.redirect('/')
       }
     }
   }
