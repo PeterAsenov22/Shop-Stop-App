@@ -10,8 +10,8 @@ let productSchema = mongoose.Schema({
     default: 0
   },
   image: {type: 'String'},
-  buyer: {type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
-  creator: {type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true},
+  buyer: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true}
 })
 
