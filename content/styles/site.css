@@ -137,9 +137,13 @@ textarea.input-field {
 }
 
 .product-img {
-  width: 100%;
-  max-width: 350px;
-  max-height: 350px;
+  width: 270px;
+  height: 205px;
+}
+
+.content {
+  width: 70%;
+  height: 160px;
 }
 
 .cards {
