@@ -31,5 +31,7 @@ module.exports = (app) => {
 
   app.post('/user/logout', auth.isAuthenticated, handlers.user.logout)
 
+  app.get('/user/profile', auth.isAuthenticated, handlers.user.profileGet)
+
   app.all('*', handlers.error.error)
 }

@@ -8,6 +8,7 @@
   <title>ShopStop</title>
   <link rel="stylesheet" href="/content/styles/site.css"/>
   <link rel="icon" href="/content/images/favicon.ico" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
   <header>
@@ -15,6 +16,7 @@
       <ul>
         <li><a href="/">Home Page</a></li>
         {{#if user}}
+          <li><a href="/user/profile">My Profile</a></li>
           <li><a href="/product/add">Add Product</a></li>
         {{/if}}
         {{#if admin}}
@@ -54,4 +56,5 @@
     <p>&copy; ShopStop</p>
   </footer>
 </body>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </html>
