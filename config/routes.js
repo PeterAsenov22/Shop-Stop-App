@@ -9,8 +9,8 @@ module.exports = (app) => {
   app.get('/product/add', auth.isAuthenticated, handlers.product.addGet)
   app.post('/product/add', auth.isAuthenticated, upload.single('image'), handlers.product.addPost)
 
-  app.get('/category/add', auth.isInRole('Admin'), handlers.category.addGet)
-  app.post('/category/add', auth.isInRole('Admin'), handlers.category.addPost)
+  app.get('/category/add', auth.isAdmin, handlers.category.addGet)
+  app.post('/category/add', auth.isAdmin, handlers.category.addPost)
 
   app.get('/category/:category/products', auth.isAuthenticated, handlers.category.productByCategory)
 
@@ -21,7 +21,7 @@ module.exports = (app) => {
   app.post('/product/delete/:id', auth.isAuthenticated, handlers.product.deletePost)
 
   app.get('/product/buy/:id', auth.isAuthenticated, handlers.product.buyGet)
-  app.get('/product/buy/:id', auth.isAuthenticated, handlers.product.buyPost)
+  app.post('/product/buy/:id', auth.isAuthenticated, handlers.product.buyPost)
 
   app.get('/user/register', handlers.user.registerGet)
   app.post('/user/register', handlers.user.registerPost)

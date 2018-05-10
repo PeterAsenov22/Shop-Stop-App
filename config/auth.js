@@ -16,5 +16,13 @@ module.exports = {
         res.redirect('/')
       }
     }
+  },
+  isAdmin: (req, res, next) => {
+    if (req.user && req.user.roles.indexOf('Admin') > -1) {
+      next()
+    } else {
+      // If not authorized - login with proper account.
+      res.redirect('/')
+    }
   }
 }
