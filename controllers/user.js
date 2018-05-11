@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const encryption = require('../utilities/encryption')
+const errorHandler = require('../utilities/error-handler')
 
 module.exports.registerGet = (req, res) => {
   res.render('user/register')
@@ -35,7 +36,7 @@ module.exports.registerPost = (req, res) => {
       })
     })
     .catch(error => {
-      userFormObj.error = error.message
+      userFormObj.error = errorHandler.handleMongooseError(error)
       res.render('user/register', userFormObj)
     })
 }

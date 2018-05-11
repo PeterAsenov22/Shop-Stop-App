@@ -2,6 +2,7 @@ const fs = require('fs')
 const Product = require('../models/Product')
 const Category = require('../models/Category')
 const User = require('../models/User')
+const errorHandler = require('../utilities/error-handler')
 
 module.exports.addGet = (req, res) => {
   Category.find().then((categories) => {
@@ -32,7 +33,7 @@ module.exports.addPost = (req, res) => {
       })
     })
   }).catch(err => {
-    productObj.error = err.message
+    productObj.error = errorHandler.handleMongooseError(err)
     res.render('products/add', productObj)
   })
 }
@@ -40,10 +41,6 @@ module.exports.addPost = (req, res) => {
 module.exports.editGet = (req, res) => {
   let id = req.params.id
   Product.findById(id).populate('category').then(product => {
-    if (!product) {
-      res.sendStatus(404)
-    }
-
     if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
       Category.find().then((categories) => {
         categories.forEach(c => { c.selected = (c.id === product.category.id) })
@@ -56,6 +53,9 @@ module.exports.editGet = (req, res) => {
       res.redirect(`/?error=${encodeURIComponent('You are not allowed to edit this product!')}`)
     }
   })
+    .catch(() => {
+      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${id} was not found!`)}`)
+    })
 }
 
 module.exports.editPost = (req, res) => {
@@ -63,11 +63,6 @@ module.exports.editPost = (req, res) => {
   let editedProduct = req.body
 
   Product.findById(id).populate('category').then(product => {
-    if (!product) {
-      res.redirect(`/?error=${encodeURIComponent('Product was not found!')}`)
-      return
-    }
-
     if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
       product.name = editedProduct.name
       product.description = editedProduct.description
@@ -105,15 +100,14 @@ module.exports.editPost = (req, res) => {
       res.redirect(`/?error=${encodeURIComponent('You are not allowed to edit this product!')}`)
     }
   })
+    .catch(() => {
+      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${id} was not found!`)}`)
+    })
 }
 
 module.exports.deleteGet = (req, res) => {
   let id = req.params.id
   Product.findById(id).then(product => {
-    if (!product) {
-      res.sendStatus(404)
-    }
-
     if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
       res.render('products/delete', {
         product
@@ -122,17 +116,15 @@ module.exports.deleteGet = (req, res) => {
       res.redirect(`/?error=${encodeURIComponent('You are not allowed to delete this product!')}`)
     }
   })
+    .catch(() => {
+      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${id} was not found!`)}`)
+    })
 }
 
 module.exports.deletePost = (req, res) => {
   let id = req.params.id
 
   Product.findById(id).then(product => {
-    if (!product) {
-      res.redirect(`/?error=${encodeURIComponent('Product was not found!')}`)
-      return
-    }
-
     if ((product.creator.equals(req.user.id) || req.user.roles.indexOf('Admin') >= 0) && !product.buyer) {
       fs.unlink('.' + product.image, (err) => {
         if (err) {
@@ -155,19 +147,21 @@ module.exports.deletePost = (req, res) => {
       res.redirect(`/?error=${encodeURIComponent('You are not allowed to delete this product!')}`)
     }
   })
+    .catch(() => {
+      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${id} was not found!`)}`)
+    })
 }
 
 module.exports.buyGet = (req, res) => {
   let id = req.params.id
   Product.findById(id).select('name description image price').then(product => {
-    if (!product) {
-      res.sendStatus(404)
-    }
-
     res.render('products/buy', {
       product
     })
   })
+    .catch(() => {
+      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${id} was not found!`)}`)
+    })
 }
 
 module.exports.buyPost = (req, res) => {
@@ -188,4 +182,7 @@ module.exports.buyPost = (req, res) => {
       })
     })
   })
+    .catch(() => {
+      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${id} was not found!`)}`)
+    })
 }
