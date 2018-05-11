@@ -22,28 +22,47 @@ module.exports.addPost = (req, res) => {
     category: productObj.category
   }
 
-  if (req.file) {
-    product.image = '\\' + req.file.path
-  }
+  if (req.files.image) {
+    let productImage = req.files.image
 
-  product.creator = req.user.id
+    let path = `/images/${productImage.name}`
 
-  Product.create(product).then(product => {
-    Category.findById(product.category).then(category => {
-      category.products.push(product.id)
-      category.save()
+    product.image = path
+    product.creator = req.user.id
 
-      User.findById(req.user.id).then(user => {
-        user.createdProducts.push(product.id)
-        user.save()
+    Product.create(product).then(product => {
+      Category.findById(product.category).then(category => {
+        category.products.push(product.id)
+        category.save()
 
-        res.redirect('/')
+        User.findById(req.user.id).then(user => {
+          user.createdProducts.push(product.id)
+          user.save()
+
+          productImage.mv(`./content${path}`, (err) => {
+            if (err) {
+              console.log(err)
+              return
+            }
+
+            res.redirect('/')
+          })
+        })
+      })
+    }).catch(err => {
+      Category.find().then((categories) => {
+        productObj.error = errorHandler.handleMongooseError(err)
+        productObj.categories = categories
+        res.render('products/add', productObj)
       })
     })
-  }).catch(err => {
-    productObj.error = errorHandler.handleMongooseError(err)
-    res.render('products/add', productObj)
-  })
+  } else {
+    Category.find().then((categories) => {
+      productObj.error = 'Image is required.'
+      productObj.categories = categories
+      res.render('products/add', productObj)
+    })
+  }
 }
 
 module.exports.editGet = (req, res) => {

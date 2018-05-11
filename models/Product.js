@@ -1,15 +1,16 @@
 const mongoose = require('mongoose')
+const propertyIsRequired = '{0} is required.'
 
 let productSchema = mongoose.Schema({
-  name: {type: 'String', required: true},
-  description: {type: 'String', required: true},
+  name: {type: 'String', required: propertyIsRequired.replace('{0}', 'Name')},
+  description: {type: 'String', required: propertyIsRequired.replace('{0}', 'Description')},
   price: {
     type: 'Number',
     min: 0,
     max: Number.MAX_VALUE,
-    default: 0
+    required: propertyIsRequired.replace('{0}', 'Price')
   },
-  image: {type: 'String'},
+  image: {type: 'String', required: propertyIsRequired.replace('{0}', 'Image')},
   buyer: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true}
