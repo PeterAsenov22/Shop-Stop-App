@@ -1,13 +1,11 @@
 const handlers = require('../controllers/index')
-const multer = require('multer')
-let upload = multer({dest: './content/images'})
 const auth = require('./auth')
 
 module.exports = (app) => {
   app.get('/', handlers.home.index)
 
   app.get('/product/add', auth.isAuthenticated, handlers.product.addGet)
-  app.post('/product/add', auth.isAuthenticated, upload.single('image'), handlers.product.addPost)
+  app.post('/product/add', auth.isAuthenticated, handlers.product.addPost)
 
   app.get('/category/add', auth.isAdmin, handlers.category.addGet)
   app.post('/category/add', auth.isAdmin, handlers.category.addPost)
@@ -15,7 +13,7 @@ module.exports = (app) => {
   app.get('/category/:category/products', auth.isAuthenticated, handlers.category.productByCategory)
 
   app.get('/product/edit/:id', auth.isAuthenticated, handlers.product.editGet)
-  app.post('/product/edit/:id', auth.isAuthenticated, upload.single('image'), handlers.product.editPost)
+  app.post('/product/edit/:id', auth.isAuthenticated, handlers.product.editPost)
 
   app.get('/product/delete/:id', auth.isAuthenticated, handlers.product.deleteGet)
   app.post('/product/delete/:id', auth.isAuthenticated, handlers.product.deletePost)

@@ -5,11 +5,13 @@ const exphbs = require('express-handlebars')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const passport = require('passport')
+const fileUpload = require('express-fileupload')
 
 module.exports = (app, config) => {
   app.engine('handlebars', exphbs({defaultLayout: 'main'}))
   app.set('view engine', 'handlebars')
 
+  app.use(fileUpload())
   app.use(bodyParser.urlencoded({extended: true}))
   app.use(cookieParser())
   app.use(session({secret: 'S3cr3t', saveUninitialized: false, resave: false}))
