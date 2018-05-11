@@ -14,13 +14,21 @@ module.exports.addGet = (req, res) => {
 
 module.exports.addPost = (req, res) => {
   let productObj = req.body
-  if (req.file) {
-    productObj.image = '\\' + req.file.path
+
+  let product = {
+    name: productObj.name,
+    description: productObj.description,
+    price: productObj.price,
+    category: productObj.category
   }
 
-  productObj.creator = req.user.id
+  if (req.file) {
+    product.image = '\\' + req.file.path
+  }
 
-  Product.create(productObj).then(product => {
+  product.creator = req.user.id
+
+  Product.create(product).then(product => {
     Category.findById(product.category).then(category => {
       category.products.push(product.id)
       category.save()
@@ -183,6 +191,6 @@ module.exports.buyPost = (req, res) => {
     })
   })
     .catch(() => {
-      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${id} was not found!`)}`)
+      res.redirect(`/?error=${encodeURIComponent(`Product with Id ${productId} was not found!`)}`)
     })
 }
