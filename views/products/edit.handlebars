@@ -2,19 +2,19 @@
   <h2>Edit Product</h2>
   <div class="form-group">
     <label for="name">Name</label>
-    <input id="name" name="name" type="text" class="input-field" value="{{{product.name}}}"/>
+    <input id="name" name="name" type="text" class="input-field" value="{{product.name}}"/>
   </div>
 
   <div class="form-group">
     <label for="description">Description</label>
     <textarea id="description" name="description" type="text" 
-      class="input-field">{{{product.description}}}</textarea>
+      class="input-field">{{product.description}}</textarea>
   </div>
 
   <div class="form-group">
     <label for="price">Price</label>
     <input id="price" name="price" type="number" step="0.01" 
-      class="input-field" value="{{{product.price}}}"/>
+      class="input-field" value="{{product.price}}"/>
   </div>
 
   <div class="form-group">
@@ -27,9 +27,9 @@
     <select class="input-field" name="category">
       {{#each categories}}
         {{#if selected}}
-        <option value="{{{id}}}" selected>{{{name}}}</option>
+        <option value="{{id}}" selected>{{name}}</option>
         {{else}}
-        <option value="{{{id}}}">{{{name}}}</option>
+        <option value="{{id}}">{{name}}</option>
         {{/if}}
       {{/each}}
     </select>

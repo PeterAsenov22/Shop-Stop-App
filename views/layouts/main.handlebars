@@ -29,7 +29,7 @@
             <a href="javascript:document.getElementById('logout-form').submit()">Logout</a>
           </li>
           <li class="align-right">
-            <span>Welcome, {{{user.username}}}!</span>
+            <span>Welcome, {{user.username}}!</span>
           </li>
         {{else}}
           <li class="align-right">
@@ -44,10 +44,10 @@
   </header>
   <main>
     {{#if error}}
-       <h2 class="error-msg">{{{error}}}</h2>
+       <h2 class="error-msg">{{error}}</h2>
     {{/if}}
     {{#if success}}
-       <h2 class="success-msg">{{{success}}}</h2>
+       <h2 class="success-msg">{{success}}</h2>
     {{/if}}
 
     {{{body}}}
