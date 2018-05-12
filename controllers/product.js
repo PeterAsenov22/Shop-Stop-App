@@ -19,7 +19,8 @@ module.exports.addPost = (req, res) => {
     name: productObj.name,
     description: productObj.description,
     price: productObj.price,
-    category: productObj.category
+    category: productObj.category,
+    createdOn: Date.now()
   }
 
   if (req.files.image) {
