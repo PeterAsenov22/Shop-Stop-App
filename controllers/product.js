@@ -95,8 +95,20 @@ module.exports.editPost = (req, res) => {
       product.description = editedProduct.description
       product.price = editedProduct.price
 
-      if (req.file) {
-        product.image = '\\' + req.file.path
+      if (req.files.image) {
+        let oldPath = product.image
+        let productImage = req.files.image
+        let path = `/images/${productImage.name}`
+        product.image = path
+
+        productImage.mv(`./content${path}`, (err) => {
+          if (err) {
+            console.log(err)
+            return
+          }
+
+          fs.unlinkSync(`./content${oldPath}`)
+        })
       }
 
       if (product.category.toString() !== editedProduct.category) {
@@ -107,15 +119,25 @@ module.exports.editPost = (req, res) => {
               currentCategory.products.splice(index, 1)
             }
 
-            currentCategory.save()
-
-            newCategory.products.push(product.id)
-            newCategory.save()
-
-            product.category = editedProduct.category
-            product.save().then(() => {
-              res.redirect(`/?success=${encodeURIComponent('Product was edited successfully!')}`)
+            currentCategory.save().then(() => {
+              newCategory.products.push(product.id)
+              newCategory.save()
+                .then(() => {
+                  product.category = editedProduct.category
+                  product.save().then(() => {
+                    res.redirect(`/?success=${encodeURIComponent('Product was edited successfully!')}`)
+                  })
+                    .catch((err) => {
+                      console.log(err)
+                    })
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
             })
+              .catch((err) => {
+                console.log(err)
+              })
           })
         })
       } else {
