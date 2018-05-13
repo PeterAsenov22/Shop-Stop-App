@@ -52,14 +52,16 @@
 
     {{{body}}}
   </main>
-  <div class="pagination">
+  <div class="text-center">
+    <ul class="pagination">
       {{#if hasPrevPage}}
         <a href="/?page={{prevPage}}">❮</a>
       {{/if}}
       {{#if hasNextPage}}
         <a href="/?page={{nextPage}}">❯</a>
       {{/if}}
-    </div>
+    </ul>
+  </div>
   <footer>
     <p>&copy; ShopStop</p>
   </footer>
