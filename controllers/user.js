@@ -87,7 +87,6 @@ module.exports.profileGet = (req, res) => {
 }
 
 module.exports.profileEditGet = (req, res) => {
-  console.log(req.user)
   res.render('user/edit', {
     firstName: req.user.firstName,
     lastName: req.user.lastName,
