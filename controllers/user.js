@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const encryption = require('../utilities/encryption')
 const errorHandler = require('../utilities/error-handler')
+const fs = require('fs')
 
 module.exports.registerGet = (req, res) => {
   res.render('user/register')
@@ -20,6 +21,7 @@ module.exports.registerPost = (req, res) => {
   user.firstName = userFormObj.firstName
   user.lastName = userFormObj.lastName
   user.age = userFormObj.age
+  user.email = userFormObj.email
   user.gender = userFormObj.gender
   user.salt = encryption.generateSalt()
   user.password = encryption.generateHashedPassword(user.salt, userFormObj.password)
@@ -81,5 +83,69 @@ module.exports.profileGet = (req, res) => {
     })
     .catch(() => {
       res.redirect('/')
+    })
+}
+
+module.exports.profileEditGet = (req, res) => {
+  console.log(req.user)
+  res.render('user/edit', {
+    firstName: req.user.firstName,
+    lastName: req.user.lastName,
+    age: req.user.age,
+    email: req.user.email,
+    profileImage: req.user.image,
+    isMale: req.user.gender === 'Male'
+  })
+}
+
+module.exports.profileEditPost = (req, res) => {
+  let newInfo = req.body
+
+  User
+    .findById(req.user.id)
+    .then(user => {
+      user.firstName = newInfo.firstName
+      user.lastName = newInfo.lastName
+      user.age = newInfo.age
+      user.email = newInfo.email
+      user.gender = newInfo.gender
+
+      if (req.files.image) {
+        let oldPath = user.image
+        let userImage = req.files.image
+        let path = `/images/profilePictures/${userImage.name}`
+        user.image = path
+
+        user
+          .save()
+          .then(() => {
+            userImage.mv(`./content${path}`, (err) => {
+              if (err) {
+                console.log(err)
+                return
+              }
+
+              if (oldPath) {
+                fs.unlinkSync(`./content${oldPath}`)
+              }
+
+              res.redirect('/user/profile/?success="Suceess"')
+            })
+          })
+          .catch((err) => {
+            console.log(err)
+            res.redirect('/user/profile/?error="Error"')
+          })
+      } else {
+        user
+          .save()
+          .then(() => {
+            res.redirect('/user/profile/?success="Suceess"')
+          })
+          .catch((err) => {
+            console.log(err)
+            res.redirect('/user/profile/?error="Error"')
+          })
+      }
     })
 }
