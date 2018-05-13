@@ -24,6 +24,13 @@ let userSchema = mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: propertyIsRequired.replace('{0}', 'Last name')
   },
+  email: {
+    type: mongoose.Schema.Types.String,
+    required: propertyIsRequired.replace('{0}', 'Email')
+  },
+  image: {
+    type: mongoose.Schema.Types.String
+  },
   age: {
     type: mongoose.Schema.Types.Number,
     min: [0, 'Age must be between 0 and 120'],
