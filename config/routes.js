@@ -30,6 +30,8 @@ module.exports = (app) => {
   app.post('/user/logout', auth.isAuthenticated, handlers.user.logout)
 
   app.get('/user/profile', auth.isAuthenticated, handlers.user.profileGet)
+  app.get('/user/profile/edit', auth.isAuthenticated, handlers.user.profileEditGet)
+  app.post('/user/profile/edit', auth.isAuthenticated, handlers.user.profileEditPost)
 
   app.all('*', handlers.error.error)
 }
