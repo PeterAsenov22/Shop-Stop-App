@@ -13,6 +13,7 @@ let productSchema = mongoose.Schema({
   image: {type: 'String', required: propertyIsRequired.replace('{0}', 'Image')},
   createdOn: {type: mongoose.Schema.Types.Date, required: true},
   buyer: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  boughtOn: {type: mongoose.Schema.Types.Date},
   creator: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   category: {type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true}
 })

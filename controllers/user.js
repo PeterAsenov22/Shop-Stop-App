@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const Product = require('../models/Product')
 const encryption = require('../utilities/encryption')
 const errorHandler = require('../utilities/error-handler')
 const fs = require('fs')
@@ -146,5 +147,14 @@ module.exports.profileEditPost = (req, res) => {
             res.redirect('/user/profile/?error="Error"')
           })
       }
+    })
+}
+
+module.exports.boughtProductsGet = (req, res) => {
+  Product
+    .find({buyer: req.user.id})
+    .sort('-boughtOn')
+    .then(products => {
+      res.render('user/products', { products })
     })
 }

@@ -33,5 +33,7 @@ module.exports = (app) => {
   app.get('/user/profile/edit', auth.isAuthenticated, handlers.user.profileEditGet)
   app.post('/user/profile/edit', auth.isAuthenticated, handlers.user.profileEditPost)
 
+  app.get('/user/products/bought', auth.isAuthenticated, handlers.user.boughtProductsGet)
+
   app.all('*', handlers.error.error)
 }

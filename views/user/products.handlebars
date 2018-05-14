@@ -1,0 +1,9 @@
+<h2>Bought Products</h2>
+<br>
+<div class="cards">
+  {{#each products}}
+    {{> boughtProduct}}
+  {{else}}
+    <p>You have not bought any products.</p>
+  {{/each}}
+</div>
