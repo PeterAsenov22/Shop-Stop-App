@@ -225,6 +225,7 @@ module.exports.buyPost = (req, res) => {
     }
 
     product.buyer = req.user.id
+    product.boughtOn = Date.now()
     product.save().then(() => {
       req.user.boughtProducts.push(productId)
       req.user.save().then(() => {

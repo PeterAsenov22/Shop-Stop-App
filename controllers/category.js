@@ -41,7 +41,10 @@ module.exports.productByCategory = (req, res) => {
 
       res.render('category/all-by-category', {
         name: category.name,
-        products: category.products
+        products: category
+          .products
+          .filter(p => !p.buyer)
+          .sort((a, b) => { return b.createdOn - a.createdOn })
       })
     })
     .catch(() => {
