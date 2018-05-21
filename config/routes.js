@@ -10,7 +10,7 @@ module.exports = (app) => {
   app.get('/category/add', auth.isAdmin, handlers.category.addGet)
   app.post('/category/add', auth.isAdmin, handlers.category.addPost)
 
-  app.get('/category/:category/products', auth.isAuthenticated, handlers.category.productByCategory)
+  app.get('/category/:category/products', handlers.category.productByCategory)
 
   app.get('/product/edit/:id', auth.isAuthenticated, handlers.product.editGet)
   app.post('/product/edit/:id', auth.isAuthenticated, handlers.product.editPost)
