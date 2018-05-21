@@ -29,6 +29,9 @@ module.exports.addPost = (req, res) => {
 
 module.exports.productByCategory = (req, res) => {
   let categoryName = req.params.category
+  let queryData = req.query
+  let page = parseInt(queryData.page) || 1
+  let pageSize = 3
 
   Category
     .findOne({name: categoryName})
@@ -39,12 +42,26 @@ module.exports.productByCategory = (req, res) => {
         return
       }
 
+      console.log(category)
+      console.log(page)
+
+      let products = category
+        .products
+        .filter(p => !p.buyer)
+        .sort((a, b) => { return b.createdOn - a.createdOn })
+        .slice((page - 1) * pageSize)
+        .slice(0, pageSize)
+
+      console.log(products)
+
       res.render('category/all-by-category', {
         name: category.name,
-        products: category
-          .products
-          .filter(p => !p.buyer)
-          .sort((a, b) => { return b.createdOn - a.createdOn })
+        products: products,
+        hasPrevPage: page > 1,
+        hasNextPage: products.length > 0,
+        nextPage: page + 1,
+        prevPage: page - 1,
+        pageUrl: `/category/${categoryName}/products`
       })
     })
     .catch(() => {

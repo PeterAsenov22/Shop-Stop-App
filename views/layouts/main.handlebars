@@ -55,10 +55,10 @@
   <div class="text-center">
     <ul class="pagination">
       {{#if hasPrevPage}}
-        <a href="/?page={{prevPage}}">❮</a>
+        <a href="{{pageUrl}}?page={{prevPage}}">❮</a>
       {{/if}}
       {{#if hasNextPage}}
-        <a href="/?page={{nextPage}}">❯</a>
+        <a href="{{pageUrl}}?page={{nextPage}}">❯</a>
       {{/if}}
     </ul>
   </div>

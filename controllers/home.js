@@ -32,7 +32,8 @@ module.exports.index = (req, res) => {
         hasPrevPage: page > 1,
         hasNextPage: products.length > 0,
         nextPage: page + 1,
-        prevPage: page - 1
+        prevPage: page - 1,
+        pageUrl: '/'
       })
     })
 }
