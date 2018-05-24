@@ -42,17 +42,12 @@ module.exports.productByCategory = (req, res) => {
         return
       }
 
-      console.log(category)
-      console.log(page)
-
       let products = category
         .products
         .filter(p => !p.buyer)
         .sort((a, b) => { return b.createdOn - a.createdOn })
         .slice((page - 1) * pageSize)
         .slice(0, pageSize)
-
-      console.log(products)
 
       res.render('category/all-by-category', {
         name: category.name,

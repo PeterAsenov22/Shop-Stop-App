@@ -4,7 +4,7 @@
   "description": "Very simple product catalog website.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "url": "https://github.com/PeterAsenov22/Shop-Stop-App/issues"
   },
   "homepage": "https://github.com/PeterAsenov22/Shop-Stop-App#readme",
+  "engine": "8.10.0",
   "dependencies": {
     "body-parser": "1.18.2",
     "cookie-parser": "1.4.3",
